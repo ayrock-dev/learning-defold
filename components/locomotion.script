@@ -1,0 +1,68 @@
+-- properties
+go.property("max_speed", 100)
+go.property("friction", 5)
+go.property("accelleration", vmath.vector3(0,0,0))
+go.property("velocity", vmath.vector3(0,0,0))
+
+-- local
+
+local RESTING_VEL_TOLERANCE = 0.01;
+
+-- script lifecycle hooks
+
+function init(self)
+	self.locomotion = {}
+end
+
+function final(self)
+	self.locomotion = nil
+end
+
+function update(self, dt)
+	local pos = go.get_position();
+
+	local dt_seconds = dt * 1000;
+
+	msg.post("@render:", "draw_text", { text = "vx " .. self.velocity.x, position = vmath.vector3(200, 200, 0) })
+	msg.post("@render:", "draw_text", { text = "vy " .. self.velocity.y, position = vmath.vector3(200, 220, 0) })
+	msg.post("@render:", "draw_text", { text = "ax " .. self.accelleration.x, position = vmath.vector3(200, 240, 0) })
+	msg.post("@render:", "draw_text", { text = "ay " .. self.accelleration.y, position = vmath.vector3(200, 260, 0) })
+
+	local ax = 0.5 * self.accelleration.x * math.pow(dt_seconds, 2)
+	local ay = 0.5 * self.accelleration.y * math.pow(dt_seconds, 2)
+
+	local friction = 0.333333333 * self.friction * math.pow(dt_seconds, 3)
+
+	if ax == 0 then 
+		if self.velocity.x > RESTING_VEL_TOLERANCE then
+			self.velocity.x = self.velocity.x - friction
+		elseif self.velocity.x < -RESTING_VEL_TOLERANCE then
+			self.velocity.x = self.velocity.x + friction
+		end
+	else
+		self.velocity.x = self.velocity.x + ax
+	end
+
+	if ay == 0 then 
+		if self.velocity.y > RESTING_VEL_TOLERANCE then
+			self.velocity.y = self.velocity.y - friction
+		elseif self.velocity.y < -RESTING_VEL_TOLERANCE then
+			self.velocity.y = self.velocity.y + friction
+		end
+	else
+		self.velocity.y = self.velocity.y + ay
+	end
+
+	if vmath.length(self.velocity) > self.max_speed then
+		local scalar = vmath.normalize(self.velocity);
+		self.velocity =  vmath.vector3(
+			self.velocity.x * scalar.x,
+			self.velocity.y * scalar.y,
+			0
+		)
+	end
+	
+	pos.x = pos.x + self.velocity.x * dt_seconds
+	pos.y = pos.y + self.velocity.y * dt_seconds
+	go.set_position(pos);
+end

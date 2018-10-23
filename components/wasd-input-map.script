@@ -1,0 +1,24 @@
+go.property("left_input_message", hash("move_left"))
+go.property("right_input_message", hash("move_right"))
+go.property("up_input_message", hash("move_up"))
+go.property("down_input_message", hash("move_down"))
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("input_key_left") then
+		msg.post(".", self.left_input_message, action)
+	elseif action_id == hash("input_key_right") then
+		msg.post(".", self.right_input_message, action)
+	elseif action_id == hash("input_key_up") then
+		msg.post(".", self.up_input_message, action)
+	elseif action_id == hash("input_key_down") then
+		msg.post(".", self.down_input_message, action)
+	end
+end

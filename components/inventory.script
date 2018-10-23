@@ -1,0 +1,51 @@
+-- properties
+
+go.property("maxInventorySlots", 8)
+
+-- methods
+
+local function initInventory(size)
+	local inventory = {}
+	for i=1,size do
+		inventory[i] = nil
+	end
+end
+
+local function add(self, id) 
+	self.inventory.slots[id]
+end
+
+-- script lifecycle hooks
+
+function init(self)
+	self.inventory = {
+		slots: initInventory(self.maxInventorySlots);
+	}
+end
+
+function final(self)
+	self.inventory = nil;
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("add_to_inventory") then
+		add(self, message.id)
+	elseif message_id == hash("remove_from_inventory") then
+		remove(self, message.id)
+	end
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

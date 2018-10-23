@@ -1,0 +1,42 @@
+go.property("player_speed", 5)
+
+function init(self)
+	-- Add initialization code here
+	-- Remove this function if not needed
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("move_left") and message.pressed then
+		go.set("#locomotion", "accelleration.x", -self.player_speed)
+	elseif message_id == hash("move_right") and message.pressed then
+		go.set("#locomotion", "accelleration.x", self.player_speed)
+	elseif message_id == hash("move_up") and message.pressed then
+		go.set("#locomotion", "accelleration.y", self.player_speed)
+	elseif message_id == hash("move_down") and message.pressed then
+		go.set("#locomotion", "accelleration.y", -self.player_speed)
+	elseif (message_id == hash("move_left") or message_id == hash("move_right")) and message.released then
+		go.set("#locomotion", "accelleration.x", 0)
+	elseif (message_id == hash("move_up") or message_id == hash("move_down")) and message.released then
+		go.set("#locomotion", "accelleration.y", 0)
+	end
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

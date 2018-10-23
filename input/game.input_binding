@@ -1,0 +1,16 @@
+key_trigger {
+  input: KEY_LEFT
+  action: "input_key_left"
+}
+key_trigger {
+  input: KEY_RIGHT
+  action: "input_key_right"
+}
+key_trigger {
+  input: KEY_UP
+  action: "input_key_up"
+}
+key_trigger {
+  input: KEY_DOWN
+  action: "input_key_down"
+}
